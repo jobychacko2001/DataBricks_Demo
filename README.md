@@ -105,6 +105,8 @@ This project simulates a production-grade data engineering pipeline for a fictio
 └── Retail_dashboard
 
 ---
+<img width="2536" height="1432" alt="image" src="https://github.com/user-attachments/assets/4675f37d-c471-4349-b8a4-5ea7f610e909" />
+---
 
 ## 👤 Author
 
