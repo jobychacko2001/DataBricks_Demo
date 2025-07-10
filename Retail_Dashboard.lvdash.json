@@ -1,0 +1,486 @@
+{
+  "datasets": [
+    {
+      "name": "f0d55cd8",
+      "displayName": "Retail Sales Summary Total Sales Calculation",
+      "queryLines": [
+        "SELECT Country, SUM(total_sales) AS total_sales\n",
+        "FROM retail_demo.gold_sales\n",
+        "WHERE Country != 'United Kingdom'\n",
+        "GROUP BY Country\n",
+        "ORDER BY total_sales DESC"
+      ],
+      "catalog": "demoworkspacejoby",
+      "schema": "retail_demo"
+    },
+    {
+      "name": "46f103db",
+      "displayName": "Monthly Retail Sales Aggregation Analysis",
+      "queryLines": [
+        "SELECT DATE_TRUNC('month', invoice_date) AS month, \n",
+        "       SUM(total_sales) AS monthly_sales\n",
+        "FROM retail_demo.gold_sales\n",
+        "GROUP BY month\n",
+        "ORDER BY month"
+      ]
+    },
+    {
+      "name": "b50d1af1",
+      "displayName": "Retail Sales Data by Country and Date",
+      "queryLines": [
+        "SELECT \n",
+        "  invoice_date, \n",
+        "  country, \n",
+        "  total_sales \n",
+        "FROM retail_demo.gold_sales \n",
+        "WHERE invoice_date IS NOT NULL\n",
+        "ORDER BY invoice_date ASC"
+      ]
+    },
+    {
+      "name": "fbba4047",
+      "displayName": "Top 10 Products by Total Revenue Analysis",
+      "queryLines": [
+        "SELECT \n",
+        "  description_clean AS product, \n",
+        "  total_revenue \n",
+        "FROM retail_demo.gold_sales_by_product \n",
+        "ORDER BY total_revenue DESC \n",
+        "LIMIT 10"
+      ]
+    },
+    {
+      "name": "aaed77b4",
+      "displayName": "Customer Spending Data Analysis",
+      "queryLines": [
+        "SELECT \n",
+        "  CASE \n",
+        "    WHEN total_spent < 100 THEN '<$100'\n",
+        "    WHEN total_spent < 500 THEN '$100–499'\n",
+        "    WHEN total_spent < 1000 THEN '$500–999'\n",
+        "    WHEN total_spent < 5000 THEN '$1K–4.9K'\n",
+        "    ELSE '$5K+' \n",
+        "  END AS spend_bucket,\n",
+        "  COUNT(*) AS customer_count\n",
+        "FROM retail_demo.gold_sales_by_customer \n",
+        "WHERE total_spent IS NOT NULL\n",
+        "GROUP BY spend_bucket\n",
+        "ORDER BY spend_bucket"
+      ]
+    },
+    {
+      "name": "10fbc266",
+      "displayName": "Hourly Retail Sales Aggregation Analysis",
+      "queryLines": [
+        "SELECT \n",
+        "  hour, \n",
+        "  SUM(total_sales) AS total_sales \n",
+        "FROM retail_demo.gold_hourly_sales \n",
+        "GROUP BY hour \n",
+        "ORDER BY hour"
+      ]
+    },
+    {
+      "name": "918079d5",
+      "displayName": "Weekly Country Sales Data Analysis",
+      "queryLines": [
+        "SELECT \n",
+        "  week_start, \n",
+        "  weekly_sales\n",
+        "FROM \n",
+        "  retail_demo.gold_weekly_sales\n",
+        "WHERE \n",
+        "  country = 'United Kingdom'\n",
+        "ORDER BY \n",
+        "  week_start"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "32a1d3a8",
+      "displayName": "insights_gold_retail",
+      "layout": [
+        {
+          "widget": {
+            "name": "c7d16104",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f0d55cd8",
+                  "fields": [
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    },
+                    {
+                      "name": "Country",
+                      "expression": "`Country`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(total_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_sales"
+                },
+                "y": {
+                  "fieldName": "Country",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Country"
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": "Total Sales (Excluding UK)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "b5de8eb6",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f0d55cd8",
+                  "fields": [
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    },
+                    {
+                      "name": "Country",
+                      "expression": "`Country`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(total_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_sales"
+                },
+                "color": {
+                  "fieldName": "Country",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Country"
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "title": "Sales Distribution",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 7,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "5b191e7b",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b50d1af1",
+                  "fields": [
+                    {
+                      "name": "monthly(invoice_date)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `invoice_date`)"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "area",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(invoice_date)",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "invoice_date"
+                },
+                "y": {
+                  "fieldName": "sum(total_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_sales"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 3,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "f395b74e",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fbba4047",
+                  "fields": [
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    },
+                    {
+                      "name": "sum(total_revenue)",
+                      "expression": "SUM(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "product",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "product"
+                },
+                "y": {
+                  "fieldName": "sum(total_revenue)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_revenue"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 13,
+            "width": 3,
+            "height": 9
+          }
+        },
+        {
+          "widget": {
+            "name": "df2df66e",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "aaed77b4",
+                  "fields": [
+                    {
+                      "name": "spend_bucket",
+                      "expression": "`spend_bucket`"
+                    },
+                    {
+                      "name": "sum(customer_count)",
+                      "expression": "SUM(`customer_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "histogram",
+              "encodings": {
+                "x": {
+                  "fieldName": "spend_bucket",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "spend_bucket"
+                },
+                "y": {
+                  "fieldName": "sum(customer_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of customer_count"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 3,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "42513862",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "10fbc266",
+                  "fields": [
+                    {
+                      "name": "hour",
+                      "expression": "`hour`"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "hour",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "hour"
+                },
+                "y": {
+                  "fieldName": "sum(total_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_sales"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Hourly Sales Trend"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 22,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "facab76b",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "918079d5",
+                  "fields": [
+                    {
+                      "name": "week_start",
+                      "expression": "`week_start`"
+                    },
+                    {
+                      "name": "sum(weekly_sales)",
+                      "expression": "SUM(`weekly_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "area",
+              "encodings": {
+                "x": {
+                  "fieldName": "week_start",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "week_start"
+                },
+                "y": {
+                  "fieldName": "sum(weekly_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of weekly_sales"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Weekly Sales Trend – United Kingdom"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 28,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    }
+  }
+}
