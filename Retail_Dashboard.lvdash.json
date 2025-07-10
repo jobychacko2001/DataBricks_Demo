@@ -280,11 +280,11 @@
                       "expression": "`product`"
                     },
                     {
-                      "name": "sum(total_revenue)",
-                      "expression": "SUM(`total_revenue`)"
+                      "name": "total_revenue",
+                      "expression": "`total_revenue`"
                     }
                   ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
@@ -300,12 +300,16 @@
                   "displayName": "product"
                 },
                 "y": {
-                  "fieldName": "sum(total_revenue)",
+                  "fieldName": "total_revenue",
                   "scale": {
                     "type": "quantitative"
                   },
-                  "displayName": "Sum of total_revenue"
+                  "displayName": "total_revenue"
                 }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Top 10 products by revenu"
               }
             }
           },
@@ -313,7 +317,7 @@
             "x": 3,
             "y": 13,
             "width": 3,
-            "height": 9
+            "height": 7
           }
         },
         {
